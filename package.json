@@ -7,10 +7,10 @@
   "type": "commonjs",
   "main": "dist/server.js",
   "scripts": {
-    "start": "node ./dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "dotenv": "^16.5.0",
