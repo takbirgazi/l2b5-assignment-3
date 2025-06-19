@@ -14,5 +14,4 @@ npm-debug.log*
 Thumbs.db
 
 # Build output
-dist/
 build/
