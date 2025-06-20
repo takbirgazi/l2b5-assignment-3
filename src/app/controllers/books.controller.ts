@@ -13,7 +13,7 @@ booksRoute.post("/books", async (req: Request, res: Response) => {
             data: createBook
         })
     } catch (error) {
-        res.status(400).json({
+        res.status(404).json({
             message: "Validation failed",
             success: false,
             error: error
@@ -30,11 +30,65 @@ booksRoute.get("/books", async (req: Request, res: Response) => {
             data: allBooks
         })
     } catch (error) {
-        res.status(400).json({
+        res.status(404).json({
             message: "Validation failed",
             success: false,
             error: error
         });
     }
+});
 
+booksRoute.get("/:bookId", async (req: Request, res: Response) => {
+    try {
+        const bookId = req.params.bookId;
+        const book = await Books.findById(bookId);
+        res.status(200).json({
+            success: true,
+            message: "Books retrieved successfully",
+            data: book
+        })
+    } catch (error) {
+        res.status(404).json({
+            message: "Validation failed",
+            success: false,
+            error: error
+        });
+    }
+});
+
+booksRoute.put("/:bookId", async (req: Request, res: Response) => {
+    try {
+        const bookId = req.params.bookId;
+        const body = req.body;
+        const updatedBook = await Books.findByIdAndUpdate(bookId, body, { new: true });
+        res.status(200).json({
+            success: true,
+            message: "Book updated successfully",
+            data: updatedBook
+        })
+    } catch (error) {
+        res.status(404).json({
+            message: "Validation failed",
+            success: false,
+            error: error
+        });
+    }
+});
+
+booksRoute.delete("/:bookId", async (req: Request, res: Response) => {
+    try {
+        const bookId = req.params.bookId;
+        await Books.findByIdAndDelete(bookId);
+        res.status(200).json({
+            success: true,
+            message: "Book deleted successfully",
+            data: null
+        })
+    } catch (error) {
+        res.status(404).json({
+            message: "Validation failed",
+            success: false,
+            error: error
+        });
+    }
 })

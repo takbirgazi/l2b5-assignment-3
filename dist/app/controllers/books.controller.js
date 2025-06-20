@@ -51,3 +51,21 @@ exports.booksRoute.get("/books", (req, res) => __awaiter(void 0, void 0, void 0,
         });
     }
 }));
+exports.booksRoute.get("/:bookId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const bookId = req.params.bookId;
+        const book = yield books_model_1.Books.findById(bookId);
+        res.status(200).json({
+            success: true,
+            message: "Books retrieved successfully",
+            data: book
+        });
+    }
+    catch (error) {
+        res.status(400).json({
+            message: "Validation failed",
+            success: false,
+            error: error
+        });
+    }
+}));

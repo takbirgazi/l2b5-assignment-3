@@ -21,11 +21,11 @@ let server;
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            // const dbConn = process.env.DATABASE_CONN;
-            // if (!dbConn) {
-            //     throw new Error("Database Connection Failed");
-            // }
-            yield mongoose_1.default.connect(`mongodb+srv://takbirgazi:NoteApp@cluster0.eklml.mongodb.net/library-management?retryWrites=true&w=majority&appName=Cluster0`);
+            const dbConn = process.env.DATABASE_CONN;
+            if (!dbConn) {
+                throw new Error("Database Connection Failed");
+            }
+            yield mongoose_1.default.connect(dbConn);
             server = app_1.default.listen(PORT, () => {
                 console.log(`Server is running at localhost:${PORT}`);
             });
