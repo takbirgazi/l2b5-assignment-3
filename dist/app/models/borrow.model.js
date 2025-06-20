@@ -1,7 +1,8 @@
-import { model, Schema } from "mongoose";
-import { IBorrow } from "../interfaces/borrow.interface";
-
-const borrow = new Schema<IBorrow>({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Borrow = void 0;
+const mongoose_1 = require("mongoose");
+const borrow = new mongoose_1.Schema({
     book: {
         type: String,
         ref: "Books",
@@ -19,5 +20,4 @@ const borrow = new Schema<IBorrow>({
     versionKey: false,
     timestamps: true
 });
-
-export const Borrow = model<IBorrow>('Borrow', borrow);
+exports.Borrow = (0, mongoose_1.model)('Borrow', borrow);

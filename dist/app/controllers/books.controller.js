@@ -16,7 +16,7 @@ exports.booksRoute = void 0;
 const express_1 = __importDefault(require("express"));
 const books_model_1 = require("../models/books.model");
 exports.booksRoute = express_1.default.Router();
-exports.booksRoute.post("/books", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.booksRoute.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const body = req.body;
         const createBook = yield books_model_1.Books.create(body);
@@ -34,9 +34,23 @@ exports.booksRoute.post("/books", (req, res) => __awaiter(void 0, void 0, void 0
         });
     }
 }));
-exports.booksRoute.get("/books", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.booksRoute.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const allBooks = yield books_model_1.Books.find();
+        const { filter, sortBy = "createdAt", sort = "asc", limit = "10" } = req.query;
+        // Build filter object
+        const query = {};
+        if (filter) {
+            query.genre = filter;
+        }
+        // Build sort object
+        const sortOrder = sort === "desc" ? -1 : 1;
+        const sortObj = {};
+        sortObj[sortBy] = sortOrder;
+        // Limit
+        const limitNum = parseInt(limit, 10) || 10;
+        const allBooks = yield books_model_1.Books.find(query)
+            .sort(sortObj)
+            .limit(limitNum);
         res.status(200).json({
             success: true,
             message: "Books retrieved successfully",

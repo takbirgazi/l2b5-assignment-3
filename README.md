@@ -16,7 +16,7 @@ This project is a simple library management system designed to help users manage
 
 The following API endpoints are available for interacting with the library management system:
 
-Base URL: [https://library-management-five-lac.vercel.app/api](https://library-management-five-lac.vercel.app)
+Base URL: [https://library-management-five-lac.vercel.app](https://library-management-five-lac.vercel.app)
 
 - `GET /api/books`  
 - `POST /api/books`  
