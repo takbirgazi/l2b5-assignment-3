@@ -10,11 +10,11 @@ let server: Server;
 
 async function main() {
     try {
-        const dbConn = process.env.DATABASE_CONN;
-        if (!dbConn) {
-            throw new Error("Database Connection Failed");
-        }
-        await mongoose.connect(dbConn);
+        // const dbConn = process.env.DATABASE_CONN;
+        // if (!dbConn) {
+        //     throw new Error("Database Connection Failed");
+        // }
+        await mongoose.connect(`mongodb+srv://takbirgazi:NoteApp@cluster0.eklml.mongodb.net/library-management?retryWrites=true&w=majority&appName=Cluster0`);
         server = app.listen(PORT, () => {
             console.log(`Server is running at localhost:${PORT}`);
         });
