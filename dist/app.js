@@ -8,7 +8,7 @@ const books_controller_1 = require("./app/controllers/books.controller");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use("/api", books_controller_1.booksRoute);
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
     try {
         res.status(200).json({
             success: true,

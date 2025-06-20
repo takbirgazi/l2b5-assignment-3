@@ -27,7 +27,7 @@ exports.booksRoute.post("/books", (req, res) => __awaiter(void 0, void 0, void 0
         });
     }
     catch (error) {
-        res.status(400).json({
+        res.status(404).json({
             message: "Validation failed",
             success: false,
             error: error
@@ -44,7 +44,7 @@ exports.booksRoute.get("/books", (req, res) => __awaiter(void 0, void 0, void 0,
         });
     }
     catch (error) {
-        res.status(400).json({
+        res.status(404).json({
             message: "Validation failed",
             success: false,
             error: error
@@ -62,7 +62,44 @@ exports.booksRoute.get("/:bookId", (req, res) => __awaiter(void 0, void 0, void 
         });
     }
     catch (error) {
-        res.status(400).json({
+        res.status(404).json({
+            message: "Validation failed",
+            success: false,
+            error: error
+        });
+    }
+}));
+exports.booksRoute.put("/:bookId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const bookId = req.params.bookId;
+        const body = req.body;
+        const updatedBook = yield books_model_1.Books.findByIdAndUpdate(bookId, body, { new: true });
+        res.status(200).json({
+            success: true,
+            message: "Book updated successfully",
+            data: updatedBook
+        });
+    }
+    catch (error) {
+        res.status(404).json({
+            message: "Validation failed",
+            success: false,
+            error: error
+        });
+    }
+}));
+exports.booksRoute.delete("/:bookId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const bookId = req.params.bookId;
+        yield books_model_1.Books.findByIdAndDelete(bookId);
+        res.status(200).json({
+            success: true,
+            message: "Book deleted successfully",
+            data: null
+        });
+    }
+    catch (error) {
+        res.status(404).json({
             message: "Validation failed",
             success: false,
             error: error

@@ -3,7 +3,7 @@ import { Books } from "../models/books.model";
 
 export const booksRoute = express.Router();
 
-booksRoute.post("/books", async (req: Request, res: Response) => {
+booksRoute.post("/", async (req: Request, res: Response) => {
     try {
         const body = req.body;
         const createBook = await Books.create(body);
@@ -21,7 +21,7 @@ booksRoute.post("/books", async (req: Request, res: Response) => {
     }
 });
 
-booksRoute.get("/books", async (req: Request, res: Response) => {
+booksRoute.get("/", async (req: Request, res: Response) => {
     try {
         const allBooks = await Books.find();
         res.status(200).json({
