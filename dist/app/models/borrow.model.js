@@ -4,8 +4,8 @@ exports.Borrow = void 0;
 const mongoose_1 = require("mongoose");
 const borrow = new mongoose_1.Schema({
     book: {
-        type: String,
-        ref: "Books",
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "books",
         required: true
     },
     quantity: {

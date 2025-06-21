@@ -8,19 +8,23 @@ export const borrowRoute = express.Router();
 borrowRoute.post("/", async (req: Request, res: Response) => {
     try {
         const body = req.body;
+        const bookId = new ObjectId(body.book);
 
         // Get the book and check
         const bookAggArr = await Books.aggregate([
-            { $match: { _id: new ObjectId(body.book) } },
+            { $match: { _id: bookId } },
             { $project: { copies: 1, _id: 1 } }
         ]);
         const bookAgg = bookAggArr[0] || null;
 
-        if (bookAgg.copies > 0 && bookAgg.copies >= body.quantity) {
-            const borrowData = await Borrow.create(body);
-            // Update the books copies after borrowing
+        if (bookAgg && bookAgg.copies > 0 && bookAgg.copies >= body.quantity) {
+            const borrowData = await Borrow.create({
+                ...body,
+                book: bookId
+            });
+
             await Books.updateOne(
-                { _id: new ObjectId(body.book) },
+                { _id: bookId },
                 {
                     $inc: { copies: -body.quantity },
                     ...(bookAgg.copies === body.quantity && { $set: { available: false } })
@@ -49,70 +53,49 @@ borrowRoute.post("/", async (req: Request, res: Response) => {
 
 borrowRoute.get("/", async (req: Request, res: Response) => {
     try {
-        const allBorrow = await Borrow.find();
+        const allBorrowBooks = await Borrow.aggregate([
+            {
+                $group: {
+                    _id: "$book",
+                    totalQuantity: { $sum: "$quantity" }
+                }
+            },
+            {
+                $lookup: {
+                    from: "books",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "bookInfo"
+                }
+            },
+            {
+                $unwind: "$bookInfo"
+            },
+            {
+                $project: {
+                    _id: 0,
+                    book: {
+                        title: "$bookInfo.title",
+                        isbn: "$bookInfo.isbn"
+                    },
+                    totalQuantity: 1
+                }
+            }
+        ]);
+
         res.status(200).json({
             success: true,
             message: "Borrowed books summary retrieved successfully",
-            data: allBorrow
+            data: allBorrowBooks
         });
+
     } catch (error) {
-        res.status(500).json({
-            message: "Failed to retrieve borrowed books",
+        console.error(error);
+        res.status(404).json({
             success: false,
+            message: "Failed to retrieve borrowed books summary",
             error
         });
     }
 });
-
-// borrowRoute.get("/", async (req: Request, res: Response) => {
-//     try {
-//         const summary = await Borrow.aggregate([
-//             {
-//                 // Group borrow records by book and sum the quantity
-//                 $group: {
-//                     _id: "$book", // this is the book's ObjectId
-//                     totalQuantity: { $sum: "$quantity" }
-//                 }
-//             },
-//             {
-//                 // Join with books collection
-//                 $lookup: {
-//                     from: "books",
-//                     localField: "book",       // book ID from group
-//                     foreignField: "_id",     // book ID in books collection
-//                     as: "bookInfo"
-//                 }
-//             },
-//             {
-//                 // Flatten bookInfo array
-//                 $unwind: "$bookInfo"
-//             },
-//             {
-//                 // Final structure
-//                 $project: {
-//                     _id: 0,
-//                     totalQuantity: 1,
-//                     book: {
-//                         title: "$bookInfo.title",
-//                         isbn: "$bookInfo.isbn"
-//                     }
-//                 }
-//             }
-//         ]);
-
-//         res.status(200).json({
-//             success: true,
-//             message: "Borrowed books summary retrieved successfully",
-//             data: summary
-//         });
-
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({
-//             success: false,
-//             message: "Failed to retrieve borrowed books summary",
-//             error
-//         });
-//     }
-// });
 

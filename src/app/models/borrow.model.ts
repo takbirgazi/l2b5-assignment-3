@@ -3,8 +3,8 @@ import { IBorrow } from "../interfaces/borrow.interface";
 
 const borrow = new Schema<IBorrow>({
     book: {
-        type: String,
-        ref: "Books",
+        type: Schema.Types.ObjectId,
+        ref: "books",
         required: true
     },
     quantity: {
