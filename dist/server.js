@@ -16,7 +16,7 @@ const app_1 = __importDefault(require("./app"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const PORT = 3000;
+const PORT = 5000;
 let server;
 function main() {
     return __awaiter(this, void 0, void 0, function* () {

@@ -16,3 +16,4 @@ Thumbs.db
 # Build output
 build/
 .vercel/
+.vercel
